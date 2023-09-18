@@ -32,14 +32,17 @@ def main():
     for i, tokenized_articles in enumerate(tokenized_articles):
         write_pipeline_stage_to_file(tokenized_articles, 'Tokenized', i + 1)
 
+        # Step 3: Lowercase all articles
         lowercase_articles = to_lowercase(tokenized_articles)
         write_pipeline_stage_to_file(lowercase_articles, 'Lowercased', i + 1)
 
+        # Step 4: Stem all articles
         stemmed_articles = stem_tokens(lowercase_articles)
         write_pipeline_stage_to_file(stemmed_articles, 'Stemmed', i + 1)
 
+        # Step 5: Remove stopwords for all articles
         stopwords_removed_articles = remove_stopwords(stemmed_articles, stop_word_list)
-        write_pipeline_stage_to_file(lowercase_articles, 'Stopwords Removed', i + 1)
+        write_pipeline_stage_to_file(stopwords_removed_articles, 'Stopwords Removed', i + 1)
 
 
 if __name__ == "__main__":
