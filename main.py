@@ -1,5 +1,5 @@
 import os
-from article_pipeline import read_extract_text, tokenize, to_lowercase, stem_tokens, remove_stopwords, \
+from pipeline import read_extract_text, tokenize, to_lowercase, stem_tokens, remove_stopwords, \
     read_stopwords_from_file, write_pipeline_stage_to_file
 
 
@@ -15,7 +15,7 @@ def main():
 
     # Step 1: Save original articles before processing
     for i, article in enumerate(articles[:5]):
-        # Create the full path for the output file within the 'original_articles' directory
+        # Create the directory for outputs if it doesn't already exist
         full_path = os.path.join('processed_output', f"Original-Article-{i + 1}.txt")
         with open(full_path, "w", encoding='utf-8') as f:
             f.write(article)

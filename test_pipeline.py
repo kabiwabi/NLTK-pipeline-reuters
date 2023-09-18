@@ -1,7 +1,5 @@
 import unittest
-from unittest.mock import patch, mock_open
-from article_pipeline import read_extract_text, tokenize, to_lowercase, stem_tokens, remove_stopwords, \
-    read_stopwords_from_file
+from pipeline import tokenize, to_lowercase, stem_tokens, remove_stopwords
 
 
 class PipelineUnitTests(unittest.TestCase):
