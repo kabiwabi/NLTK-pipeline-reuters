@@ -1,18 +1,12 @@
 import os
-import nltk
-from nltk.corpus import stopwords
-
-nltk.download('stopwords')
-
 from article_pipeline import read_extract_text, tokenize, to_lowercase, stem_tokens, remove_stopwords, \
-    write_pipeline_stage_to_file
+    read_stopwords_from_file, write_pipeline_stage_to_file
 
 
 def main():
     file_path = "reuters21578.tar.gz"
     extract_path = "extracted_gzip"
-    stop_word_list = stopwords.words('english')
-
+    stop_words_list = read_stopwords_from_file("Stopwords-used-for-output.txt")
     articles = read_extract_text(file_path, extract_path)
 
     # Create directory for original articles if it doesn't exist
@@ -41,7 +35,7 @@ def main():
         write_pipeline_stage_to_file(stemmed_articles, 'Stemmed', i + 1)
 
         # Step 5: Remove stopwords for all articles
-        stopwords_removed_articles = remove_stopwords(stemmed_articles, stop_word_list)
+        stopwords_removed_articles = remove_stopwords(stemmed_articles, stop_words_list)
         write_pipeline_stage_to_file(stopwords_removed_articles, 'Stopwords Removed', i + 1)
 
 

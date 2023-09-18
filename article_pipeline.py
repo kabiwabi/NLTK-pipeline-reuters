@@ -42,6 +42,11 @@ def remove_stopwords(stemmed_tokens, stopwords_list):
     return [stemmed_token for stemmed_token in stemmed_tokens if stemmed_token not in stopwords_list]
 
 
+def read_stopwords_from_file(file_path):
+    with open(file_path, 'r', encoding='utf-8') as f:
+        return [line.strip() for line in f]
+
+
 def write_pipeline_stage_to_file(stage_output, stage_name, article_number):
     full_path = os.path.join('processed_output', f"{stage_name}-output-{article_number}.txt")
     with open(full_path, "w") as f:
