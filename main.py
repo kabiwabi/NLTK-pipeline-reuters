@@ -1,17 +1,27 @@
-import os
-from pipeline import read_extract_text, tokenize, to_lowercase, stem_tokens, remove_stopwords, \
-    read_stopwords_from_file, write_pipeline_stage_to_file
+from pipeline import *
+
+CONFIG = {
+    'file_path': "reuters21578.tar.gz",
+    'extract_path': "extracted_gzip",
+    'stopwords_file': "Stopwords-used-for-output.txt",
+    'output_folder': 'processed_output'
+}
 
 
 def main():
-    file_path = "reuters21578.tar.gz"
-    extract_path = "extracted_gzip"
-    stop_words_list = read_stopwords_from_file("Stopwords-used-for-output.txt")
-    articles = read_extract_text(file_path, extract_path)
+    download_nltk_resources()
+    stop_words_list = read_stopwords_from_file(CONFIG['stopwords_file'])
 
-    # Create directory for original articles if it doesn't exist
-    if not os.path.exists('processed_output'):
-        os.makedirs('processed_output')
+    # Read & extract all the news articles from the TAR file
+    read_tar_file(CONFIG['file_path'], CONFIG['extract_path'])
+    filtered_files = filter_files_in_directory(CONFIG['extract_path'], r'reut2-\d+.sgm')
+
+    # Store only the <Text> elements from the HTML
+    articles = []
+    for file_name in filtered_files:
+        file_path = os.path.join(CONFIG['extract_path'], file_name)
+        html_content = read_html_from_file(file_path)
+        articles.extend(extract_text_from_html(html_content))
 
     # Step 1: Save original articles before processing
     for i, article in enumerate(articles[:5]):

@@ -1,28 +1,33 @@
 import nltk
+import os
+import re
+import tarfile
 from bs4 import BeautifulSoup
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 
-import tarfile
-import os
-import re
 
-nltk.download('punkt')
+def download_nltk_resources():
+    nltk.download('punkt')
 
-def read_extract_text(file_path, extract_path):
-    extracted_articles = []
+
+def read_tar_file(file_path, extract_path):
     with tarfile.open(file_path, 'r:gz') as tar:
         tar.extractall(path=extract_path)
-        for file_name in os.listdir(path=extract_path):
-            if re.match(r'reut2-\d+.sgm', file_name):
-                with open(os.path.join(extract_path, file_name), 'r', encoding='latin-1') as news_article:
-                    raw_article_html = news_article.read()
-                    soup = BeautifulSoup(raw_article_html, 'html.parser')
-                    article_elements = soup.findAll('text')
-                    for article_element in article_elements:
-                        article_text_element = article_element.text
-                        extracted_articles.append(article_text_element)
-    return extracted_articles
+
+
+def filter_files_in_directory(path, regex):
+    return [file_name for file_name in os.listdir(path) if re.match(regex, file_name)]
+
+
+def read_html_from_file(file_path):
+    with open(file_path, 'r', encoding='latin-1') as news_article:
+        return news_article.read()
+
+
+def extract_text_from_html(html_content):
+    soup = BeautifulSoup(html_content, 'html.parser')
+    return [element.text for element in soup.findAll('text')]
 
 
 def tokenize(extracted_articles):
